@@ -20,7 +20,6 @@ buster.testCase("values",{
 		var newValue = "new value";
 		var revisedVo = vo.revised(instance,{field: newValue});
 
-		debugger
 		assert.same(newValue,revisedVo.field)
 	},
 	"revised does not affect old versions": function() {
@@ -35,31 +34,20 @@ buster.testCase("values",{
 		assert.same(originalValue,instance.field);
 	},
 
+	"valueObjectConstructor allows use of an initalizer": function() {
+		var initSpy = sinon.spy();
+		var val = "value";
+		var VO = vo.valueObjectConstructor("field",initSpy);
+
+		new VO(val);
+
+		assert.calledOnceWith(initSpy,val);
+	},
+
 	"valueObject gives you a way of extending existing constructors": function() {
 		var VO = function() {
 			vo.valueObject(this,"field",arguments);
 		};
-		assert.exception(function() {
-			new VO;
-		});
-		assert.exception(function() {
-			var instance = new VO("value");
-			instance.field = "new value";
-		});
-		var instance = new VO("value");
-		assert.same("value",instance.field);
-
-		var newValue = "new value";
-		var newInstance = vo.revised(instance,{field: newValue});
-		assert.same("value",instance.field);
-		assert.same(newValue,newInstance.field);
-	},
-	"valueObjectApplicator allows you to create named fns with a decorated prototype": function() {
-		var valueObjectApplicator = vo.valueObjectApplicator("field");
-		var VO = function() {
-			valueObjectApplicator.initialize(this,arguments);
-		};
-		valueObjectApplicator.defineFields(VO);
 		assert.exception(function() {
 			new VO;
 		});

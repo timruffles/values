@@ -1,53 +1,38 @@
 ;(function(undefined) {
 
+var noop = function() {};
+
 var values = {
 
-	valueObject: function(object) {
-		var fields = slicer(arguments,1,arguments.length - 1);
-		var args = arguments[arguments.length - 1];
-		var applicator = apply(values.valueObjectApplicator,null,fields);
-		applicator.defineFields({prototype: object},fields);
-		applicator.initialize(object,args);
+	valueObject: function(object,setup) {
+		var fields;
+		var vals;
+		if(setup && setup.fields && setup.values) {
+			fields = setup.fields; 
+			vals = setup.values;
+		} else {
+			fields = slicer(arguments,1,arguments.length - 1);
+			vals = slicer(arguments[arguments.length - 1]);
+		}
+
+		values._validateFields(fields,vals);
+		values._defineFields(object,fields,vals);
+		values._tagFields(object,fields);
+		values._freeze(object);
 	},
 	valueObjectConstructor: function() {
-		// TODO - arg define fields needs to have access to the original values!!!
-		// therefore need to define a __values on each object
-		// -   or   -
-		// use defineProperty with just a value
-		// -   or   -
-		// use Object.freeze
 		var fields = slicer(arguments);
-		var potentialInitializer = fields[fields.length - 1];
 		var initializer = noop;
+		var potentialInitializer = fields[fields.length - 1];
 		if(typeof potentialInitializer === "function") {
+			fields = fields.slice(0,fields.length - 1);
 			initializer = potentialInitializer;
-			fields = fields.slice(0,fields.length - 2);
-		};
-		var constructor = function() {
-			values._validateFields(slicer(arguments),fields);
-			return initializer.call(this);
-		};
-		values._defineFields(constructor.prototype,fields);
-
-		return constructor;
-	},
-	valueObjectApplicator: function() {
-		var fields = slicer(arguments);
-		return {
-			defineFields: function(type) {
-				values._defineFields(type.prototype,fields);
-			},
-			initialize: function(obj,vals) {
-				values._validateFields(vals,fields);
-				try {
-					values._implementionSetLock = false;
-					each(fields,function(field,index) {
-						obj[field] = vals[index];
-					});
-				} finally {
-					values._implementionSetLock = true;
-				}
-			}
+		}
+		return function() {
+			var vals = slicer(arguments);
+			values.valueObject(this,{fields: fields, values: vals});
+			apply(initializer,this,arguments);
+			return this;
 		};
 	},
 	revised: function(obj,revision) {
@@ -64,13 +49,6 @@ var values = {
 		return values._applyConstructor(obj.constructor,newArgs);
 	},
 
-	_applyConstructor: function(constructor,params) {
-		var temp = function() {};
-		temp.prototype = constructor.prototype;
-		var instance = new temp;
-		var retVal = constructor.apply(instance,params);
-		return typeof retVal === "object" ? retVal : instance
-	},
 	_assert: function(test,msg) {
 		if(!test) return values._error(msg);
 	},
@@ -80,9 +58,16 @@ var values = {
 	_error: function(msg) {
 		throw new Error(msg);
 	},
-	_defineFields: function(obj,fields) {
-		values._tagFields(obj,fields);
-		each(fields,function(field) { values._defineField(obj,field); });
+	_freeze: Object.freeze || noop,
+	_defineFields: function(obj,fields,vals) {
+		each(fields,function(field,index) { values._defineField(obj,field,vals[index]); });
+	},
+	_applyConstructor: function(constructor,params) {
+		var temp = function() {};
+		temp.prototype = constructor.prototype;
+		var instance = new temp;
+		var retVal = constructor.apply(instance,params);
+		return typeof retVal === "object" ? retVal : instance
 	},
 	_tagFields: function(obj,fields) {
 		values._defineProperty(obj,"__fields",{
@@ -93,7 +78,7 @@ var values = {
 	_defineProperty: function(obj,prop,descriptor) {
 		return Object.defineProperty(obj,prop,descriptor);
 	},
-	_defineField: function(obj,field) {
+	_defineField: function(obj,field,val) {
 		var implementation;
 		if(Object.defineProperty) {
 			implementation = values._defineFieldES5;
@@ -103,23 +88,20 @@ var values = {
 			implementation = values._defineFieldNoop;
 		}
 		values._defineField = implementation;
-		return implementation(obj,field);
+		return implementation(obj,field,val);
 	},
-	_defineFieldES5: function(obj,field) {
-		var fieldValue;
+	_defineFieldES5: function(obj,field,val) {
 		Object.defineProperty(obj,field,{
 			enumerable: true,
-			set: function(value) {
-				values._assert(values._implementionSetLock === false,"Can't change " + field + " on Immutable ValueObject");
-				fieldValue = value;
-			},
-			get: function() { return fieldValue }
+			set: function() { throw new Error("Attempt to set field on immutable ValueObject"); },
+			get: function() { return val; }
 		});
 	},
 	_defineFieldOldMozilla: function(type,field) {
 	},
-	_defineFieldNoop: noop,
-	_implementionSetLock: true,
+	_defineFieldNoop: function(object,field,val) {
+		object[field] = val;
+	},
 	_validateFields: function(args,fields) {
 		values._assert(args.length === fields.length,"Missing fields: " + fields.slice(0,fields.length).join(", "));
 		var missing = reduce(args,function(missingFields,arg,index) {
@@ -163,7 +145,6 @@ var zip = function(arrA,arrB) {
 var slicer = function(args,from,n) {
 	return [].slice.call(args, typeof from === "number" ? from : 0, n);
 };
-var noop = function() {};
 var apply = function(fn,ctx,args) {
 	return fn.apply(ctx,args);
 };

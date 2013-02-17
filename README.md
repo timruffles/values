@@ -17,12 +17,6 @@ values.js is a small library for making value objects easily:
 		// optional additional constructor
 	});
 
-	var periodValue = vo.valueObjectApplicator("from","to");
-	Period = function() {
-		periodValue.initialize(this,arguments);
-	};
-	periodValue.defineFields(Period);
-
 It offers three ways to use value objects. The first is simple - setting field values and then applying read only accessors. The second defines a simple constructor. The third creates a periodValue object that can apply fields to a prototype and validate arguments.
 
 The first and third give you a way of maintaining nice names in debugging tools - the third is better suited when you're creating lots of the objects as we're changing the prototype once rather than adding fields in the constructor.

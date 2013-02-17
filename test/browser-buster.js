@@ -7542,6 +7542,7 @@ if (typeof module === "object" && typeof require === "function") {
 
 (function (glbl) {
     glbl.buster = buster;
+		glbl.sinon = sinon;
 
     var tc = buster.testContext;
     if (tc.listeners && (tc.listeners.create || []).length > 0) { return; }

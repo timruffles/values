@@ -158,7 +158,7 @@ var ownProperty = function(obj,prop) {
 if(typeof module !== "undefined") {
 	global.module.exports = values;
 } else if(typeof define === "function") {
-	global.define(values);
+	define(values);
 } else {
 	global.vo = values;
 }

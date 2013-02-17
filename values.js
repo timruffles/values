@@ -71,7 +71,14 @@ var values = {
 		return typeof retVal === "object" ? retVal : instance;
 	},
 	_tagFields: function(obj,fields) {
-		values._defineField(obj,"__fields",fields);
+		if(Object.defineProperty) {
+			Object.defineProperty(obj,"__fields",{
+				enumerable: false,
+				value: fields
+			});
+		} else {
+			((Object.getPrototypeOf && Object.getPrototypeOf(obj)) || obj.__proto__ || obj.constructor.prototype).__fields = fields;
+		}
 	},
 	_defineField: function(obj,field,val) {
 		var implementation;

@@ -5,6 +5,12 @@ buster.testCase("values",{
 			new VO;
 		});
 	},
+	"value objects must have the correct number of fields": function() {
+		var VO = vo.valueObjectConstructor("field");
+		assert.exception(function() {
+			new VO("a","b");
+		});
+	},
 	"value objects' fields are immutable": function() {
 		var VO = vo.valueObjectConstructor("field");
 		assert.exception(function() {

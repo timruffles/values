@@ -131,7 +131,9 @@ var map = function(arr,fn,ctx) {
 var slicer = function(args,from,n) {
 	return [].slice.call(args, typeof from === "number" ? from : 0, n);
 };
-var apply = function(fn,ctx,args) {
+var apply = Function.prototype.apply ? function(fn,ctx,args) {
+	return fn.apply(ctx,args);
+} : function(fn,ctx,args) {
 	switch(args.length) {
 		case 0: return fn.call(ctx);
 		case 1: return fn.call(ctx,args[0]);

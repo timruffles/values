@@ -1,4 +1,5 @@
-;(function(undefined) {
+;(function(global,undefined) {
+"use strict";
 
 var noop = function() {};
 
@@ -63,43 +64,33 @@ var values = {
 		each(fields,function(field,index) { values._defineField(obj,field,vals[index]); });
 	},
 	_applyConstructor: function(constructor,params) {
-		var temp = function() {};
-		temp.prototype = constructor.prototype;
-		var instance = new temp;
+		var Temp = function() {};
+		Temp.prototype = constructor.prototype;
+		var instance = new Temp();
 		var retVal = constructor.apply(instance,params);
-		return typeof retVal === "object" ? retVal : instance
+		return typeof retVal === "object" ? retVal : instance;
 	},
 	_tagFields: function(obj,fields) {
-		values._defineProperty(obj,"__fields",{
-			enumerable: false,
-			value: fields
-		});
-	},
-	_defineProperty: function(obj,prop,descriptor) {
-		return Object.defineProperty(obj,prop,descriptor);
+		values._defineField(obj,"__fields",fields);
 	},
 	_defineField: function(obj,field,val) {
 		var implementation;
 		if(Object.defineProperty) {
-			implementation = values._defineFieldES5;
-		} else if(Object.__defineGetter__) {
-			implementation = values._defineFieldOldMoz;
+			implementation = values._defineGetterES5;
 		} else {
-			implementation = values._defineFieldNoop;
+			implementation = values._defineGetterUnprotected;
 		}
 		values._defineField = implementation;
 		return implementation(obj,field,val);
 	},
-	_defineFieldES5: function(obj,field,val) {
+	_defineGetterES5: function(obj,field,val) {
 		Object.defineProperty(obj,field,{
 			enumerable: true,
 			set: function() { throw new Error("Attempt to set field on immutable ValueObject"); },
 			get: function() { return val; }
 		});
 	},
-	_defineFieldOldMozilla: function(type,field) {
-	},
-	_defineFieldNoop: function(object,field,val) {
+	_defineGetterUnprotected: function(object,field,val) {
 		object[field] = val;
 	},
 	_validateFields: function(args,fields) {
@@ -118,15 +109,15 @@ var each = function(arr,fn,ctx) {
 var eachObj = function(obj,fn,ctx) {
 	if(!obj) return;
 	for(var prop in obj) {
-		if(hasOwnProperty(obj,prop)) fn.call(ctx,obj[prop],prop,obj);
-	};
+		if(ownProperty(obj,prop)) fn.call(ctx,obj[prop],prop,obj);
+	}
 };
 var reduce = function(arr,fn,initial,ctx) {
 	if(initial === undefined) {
-	 	initial = arr[0];
+		initial = arr[0];
 		arr = arr.slice(1);
 	}
-	memo = initial;
+	var memo = initial;
 	each(arr,function(member,index) {
 		memo = fn.call(ctx,memo,member,index,arr);
 	});
@@ -137,32 +128,39 @@ var map = function(arr,fn,ctx) {
 		return all.concat([ fn.call(ctx,val,index,arr) ]);
 	},[]);
 };
-var zip = function(arrA,arrB) {
-	return reduce(arrA,function(zipped,val,index) {
-		return zipped.concat([ [val,arrB[index]] ]);
-	},[]);
-};
 var slicer = function(args,from,n) {
 	return [].slice.call(args, typeof from === "number" ? from : 0, n);
 };
 var apply = function(fn,ctx,args) {
-	return fn.apply(ctx,args);
+	switch(args.length) {
+		case 0: return fn.call(ctx);
+		case 1: return fn.call(ctx,args[0]);
+		case 2: return fn.call(ctx,args[0],args[1]);
+		case 3: return fn.call(ctx,args[0],args[1],args[2]);
+		case 4: return fn.call(ctx,args[0],args[1],args[2],args[3]);
+		case 5: return fn.call(ctx,args[0],args[1],args[2],args[3],args[4]);
+		case 6: return fn.call(ctx,args[0],args[1],args[2],args[3],args[4],args[5]);
+		case 7: return fn.call(ctx,args[0],args[1],args[2],args[3],args[4],args[5],args[6]);
+		case 8: return fn.call(ctx,args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7]);
+		case 9: return fn.call(ctx,args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8]);
+		case 10: return fn.call(ctx,args[0],args[1],args[2],args[3],args[4],args[5],args[6],args[7],args[8],args[9]);
+	}
 };
 var keys = function(obj) {
 	return map(obj,function(v,k) { return k; });
 };
-var hasOwnProperty = function(obj,prop) {
-	return obj.hasOwnProperty(prop);
+var objProto = Object.prototype;
+var ownProperty = function(obj,prop) {
+	return objProto.hasOwnProperty.call(prop);
 };
 
 
 if(typeof module !== "undefined") {
-	module.exports = values;
+	global.module.exports = values;
 } else if(typeof define === "function") {
-	define(values);
+	global.define(values);
 } else {
-	window.vo = values;
-};
+	global.vo = values;
+}
 
-
-})();
+})(this);

@@ -17,9 +17,9 @@ values.js is a small library for making value objects easily:
 		// optional additional constructor
 	});
 
-It offers three ways to use value objects. The first is simple - setting field values and then applying read only accessors. The second defines a simple constructor. The third creates a periodValue object that can apply fields to a prototype and validate arguments.
+It offers two ways to use value objects. The first is simple - setting field values and then applying read only accessors. The second defines a simple constructor.
 
-The first and third give you a way of maintaining nice names in debugging tools - the third is better suited when you're creating lots of the objects as we're changing the prototype once rather than adding fields in the constructor.
+The second way allows you to maintain nice names in debugging tools.
 
 To create a new version of a value object based on an old one, use the `revised` method - which creates a new object based on the old one.
 

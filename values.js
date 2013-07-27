@@ -50,9 +50,6 @@ var values = {
 		return values._applyConstructor(obj.constructor,newArgs);
 	},
 
-	_assert: function(test,msg) {
-		if(!test) return values._error(msg);
-	},
 	_getFields: function(obj) {
 		return obj.__fields;
 	},

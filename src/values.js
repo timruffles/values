@@ -4,17 +4,17 @@
 
 var vo = {}
 var p = vo.p = {
-	applyConstructor: function(constructor,params) {
-		var Temp = function() {}
-		Temp.prototype = constructor.prototype
-		var instance = new Temp()
-		var retVal = constructor.apply(instance,params)
-		return typeof retVal === "object" ? retVal : instance
-	},
+  applyConstructor: function(constructor,params) {
+    var Temp = function() {}
+    Temp.prototype = constructor.prototype
+    var instance = new Temp()
+    var retVal = constructor.apply(instance,params)
+    return typeof retVal === "object" ? retVal : instance
+  },
   memoizedStore: typeof WeakMap == "undefined" ? {} : new WeakMap,
-	assert: function(test,msg) {
-		if(!test) throw new Error(msg)
-	}
+  assert: function(test,msg) {
+    if(!test) throw new Error(msg)
+  }
 }
 
 

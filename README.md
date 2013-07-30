@@ -1,6 +1,29 @@
 # Values
 
-Values is a library for improving your application code by adding value semantics. Lots of concepts in our apps don't have a specific 'identity' - for instance every `new Point({x: 0, y: 0})` is conceptually the same point. It's more natural if these concepts uphold these value semantics in our code, namely that ["two value objects are equal if all their fields are equal"](http://martinfowler.com/bliki/ValueObject.html).
+Values is a library for improving your application code by adding value semantics. Lots of concepts in our apps don't have a specific 'identity' - for instance every `new Point({x: 0, y: 0})` is conceptually the same point. It's more natural if these concepts uphold these value semantics in our code, namely that ["two value objects are equal if all their fields are equal"](http://martinfowler.com/bliki/ValueObject.html). But by default in Javascript object equality is based on identity, so:
+
+```javascript
+
+function Point(x,y) {
+  this.x = x;
+  this.y = y;
+}
+
+var a = new Point(0,0)
+var b = new Point(0,0)
+
+assert( a == b ) // fails - based on object identity
+```
+
+Values ensures that we can compare two value objects.
+
+```javascript
+var Point = vo.define("x","y");
+var a = new Point(0,0)
+var b = new Point(0,0)
+
+assert( a == b ) // succeeds - follows value semantics
+```
 
 ## Value semantics
 

@@ -22,11 +22,13 @@ suite("values", function(){
     assert.equal( 1, oneToTen.from )
     assert.equal( 10, oneToTen.to )
   })
+
   test("derive is based on old", function() {
     assert.equal( 2, twoToTen.from )
     assert.equal( 10, twoToTen.to )
     assert.equal( Period, twoToTen.constructor )
   })
+
 })
 
 

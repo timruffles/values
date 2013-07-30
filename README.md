@@ -9,20 +9,20 @@ function Point(x,y) {
   this.y = y;
 }
 
-var a = new Point(0,0)
-var b = new Point(0,0)
+var a = new Point(0,0);
+var b = new Point(0,0);
 
-assert( a == b ) // fails - based on object identity
+assert( a == b ); // fails - based on object identity
 ```
 
 Values ensures that we can compare two value objects based on their value:
 
 ```javascript
 var Point = vo.define("x","y");
-var a = new Point(0,0)
-var b = new Point(0,0)
+var a = new Point(0,0);
+var b = new Point(0,0);
 
-assert( a == b ) // succeeds - follows value semantics
+assert( a == b ); // succeeds - follows value semantics
 ```
 
 ## Value semantics

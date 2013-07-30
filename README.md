@@ -17,7 +17,7 @@ assert( oneToTen === naturalNumbersUnderEleven );
 
 ## Immutability
 
-ValueObjects are immutable and identified by value, not identity. Like numbers, it doesn't make sense to 'change' (mutate) a value, you simply have a new one. Allowing values to change in place leads to confusing semantics:
+ValueObjects [should be immutable](http://c2.com/cgi/wiki?ValueObjectsShouldBeImmutable). Like numbers, it doesn't make sense to 'change' (mutate) a value, you simply have a new one. Allowing values to change in place leads to confusing semantics:
 
 ```javascript
 var today = MutableDateLibrary.today();
@@ -41,7 +41,7 @@ This [really happens](http://arshaw.com/xdate/#Adding), and we've probably all m
 
 ## Mixin
 
-Rather than requiring you to use a subclassing mechanism, Values.js exposes the internals to use. `vo.memoizedConstructor` is used fulfil the value equality semantics and `vo.set` sets the field values immutably, also adding the `derive` non-enumerable method.
+Rather than requiring you to use a subclassing mechanism, Values.js exposes functions that allow you to compose your own value objects. `vo.memoizedConstructor` is used fulfil the value equality semantics and `vo.set` sets the field values immutably, also adding the [`derive`](#derive) non-enumerable method.
 
 ```javascript
 var Period = function Period() {
@@ -63,6 +63,8 @@ var QuickPeriod = vo.define("Period","from","to");
 
 ## 'Changing' a value via `derive`
 
+<a id="derive"></a>
+
 To create a new version of a value object based on an old one, use the `derive` method. This eases the creation of modified value objects, without losing the benfits of their immutability.
 
 ```javascript
@@ -81,6 +83,31 @@ The derive method takes a hash of named arguments.
 
 You'd use the `derive` method to update references to values in variables or as object properties. Values are used in mutable systems, they're just immutable themselves.
 
+## API
+
+### vo.memoizedConstructor
+
+```javascript
+vo.memoizedConstructor(constructor,params)
+```
+
+If a value object of same type with the same fields exists, returns that value object. If not, will create and return a new instance. 
+
+### vo.set
+
+```javascript
+vo.set(instance,fields,fieldValues)
+```
+
+Sets immutable fields on instance. Also adds the `derive` method as a non-enumerable property.
+
+### vo#derive
+
+```javascript
+aValueObject.derive(newValuesMap)
+```
+
+Returns a new value object with field values taken from newValuesMap, and any fields missing from newValuesMap taken from the existing value object `derive` is called on.
 
 ## Philosophy
 

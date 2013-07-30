@@ -1,10 +1,8 @@
 # Values
 
-Values is a library for improving application code by adding value semantics. Lots of concepts in our apps don't have a specific 'identity' - for instance every `Point{x: 10, y: 10}` is conceptually the same point. Concepts like this should follow value semantics, namely that two objects are the same if they have the same fields.
+Values is a library for improving your application code by adding value semantics. Lots of concepts in our apps don't have a specific 'identity' - for instance every `Point{x: 0, y: 0}` is conceptually identical. It's more natural if these concepts uphold these value semantics in our code, namely that two objects are the same if they have the same fields.
 
 In other words, ["two value objects are equal if all their fields are equal"](http://martinfowler.com/bliki/ValueObject.html).
-
-In addition, it's great if we ensure that if we have a reference to a value it'll never change. To take our point example, it'd be unfortunate if our `Point{x: 0, y: 0}` was updated to have `x: 1`: as confusing as if the number 1 suddenly got updated to 1.1. To that end value objects should be immutable: you shouldn't be able to change any fields, just create new value objects with different fields.
 
 ## Value semantics
 
@@ -36,6 +34,14 @@ assert( today === MutableDateLibrary.today() );
 
 This [really happens](http://arshaw.com/xdate/#Adding), and we've probably all made something that should be a value type mutable. The above is equally true for: intervals, ranges, dates and sets of any type.
 
+## Quick definition
+
+A quick way to define VOs which don't require custom behaviour (effectively just doing the above) is also provided.
+
+```javascript
+var Period = vo.define("from","to");
+```
+
 ## Mixin
 
 Rather than requiring you to use a subclassing mechanism, Values.js exposes functions that allow you to compose your own value objects. `vo.memoizedConstructor` is used fulfil the value equality semantics and `vo.set` sets the field values immutably, also adding the [`derive`](#derive) non-enumerable method.
@@ -50,14 +56,6 @@ var Period = function Period() {
 Period.prototype = vo.createPrototype();
 ```
 
-## Quick definition
-
-A quick way to define VOs which don't require custom behaviour (effectively just doing the above) is also provided.
-
-```javascript
-var Period = vo.define("from","to");
-```
-
 ## 'Changing' a value via `derive`
 
 <a id="derive"></a>
@@ -66,17 +64,17 @@ To create a new version of a value object based on an old one, use the `derive` 
 
 ```javascript
 var periodA = new Period(2012,2015);
-var periodB = vo.derive(periodA,{from:2013});
+var periodB = periodA.derive({from:2013});
 
 assert(periodA.from === 2012);
 assert(periodB.from === 2013);
 
-var periodC = deriveFields(periodA,{from: 2012});
+var periodC = periodB.derive({from: 2012});
 
 assert(periodA === periodC);
 ```
 
-The derive method takes a hash of named arguments.
+The derive method takes a map of named arguments.
 
 You'd use the `derive` method to update references to values in variables or as object properties. Values are used in mutable systems, they're just immutable themselves.
 
@@ -112,7 +110,7 @@ Defines a new value object contru
 aValueObject.derive(newValuesMap)
 ```
 
-Returns a new value object with field values taken from newValuesMap, and any fields missing from newValuesMap taken from the existing value object `derive` is called on.
+Instance method that returns: a new value object with field values taken by preference from newValuesMap, with any missing fields taken from the existing value object `derive` is called on.
 
 ## Philosophy
 

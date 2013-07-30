@@ -2,9 +2,7 @@
 
 values is a small library that makes creating immutable ValueObjects with value semantics easy. ValueObjects are defined by value, not identity, and cannot be changed after they're constructed - just like numbers.
 
-" two value objects are equal if all their fields are equal
-
-Martin Fowler
+In other words, ["two value objects are equal if all their fields are equal"](http://martinfowler.com/bliki/ValueObject.html).
 
 ## Value semantics
 

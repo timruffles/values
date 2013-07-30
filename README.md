@@ -15,7 +15,7 @@ var b = new Point(0,0)
 assert( a == b ) // fails - based on object identity
 ```
 
-Values ensures that we can compare two value objects.
+Values ensures that we can compare two value objects based on their value:
 
 ```javascript
 var Point = vo.define("x","y");
@@ -34,6 +34,21 @@ var a = new Range(1,10);
 var b = new Range(1,10);
 
 assert( a === b );
+```
+
+If your value object can meaningfully use the inequality operators (`>`, `<`) - for instance a set can be bigger than another set - then define a `valueOf` method to return a comparable value (a String or Number). That'll cover all comparisons for your value object!
+
+
+```javascript
+var Set = vo.define("members");
+Set.prototype.valueOf = function() {
+  return this.members.length;
+}
+
+var a = new Set([1,2,3]);
+var b = new Set([1]);
+
+assert( a > b )
 ```
 
 ## Immutability
@@ -57,7 +72,7 @@ This [really happens](http://arshaw.com/xdate/#Adding), and we've probably all m
 
 ## Mixin
 
-Rather than requiring you to use a subclassing mechanism, Values.js exposes functions that allow you to compose your own value objects. `vo.memoizedConstructor` is used fulfil the value equality semantics and `vo.set` sets the field values immutably, also adding the [`derive`](#derive) non-enumerable method.
+Rather than requiring you to use a subclassing mechanism, Values.js exposes functions that allow you to compose your own value objects and setup their construcotr and prototype as usual. `vo.memoizedConstructor` is used fulfil the value equality semantics and `vo.set` sets the field values immutably, also adding the [`derive`](#derive) non-enumerable method.
 
 ```javascript
 var Period = function Period() {
@@ -105,10 +120,12 @@ You'd use the `derive` method to update references to values in variables or as 
 ### vo.memoizedConstructor
 
 ```javascript
-vo.memoizedConstructor(constructor,params)
+vo.memoizedConstructor(constructor,params [, parameterHasher] )
 ```
 
 If a value object of same type with the same fields exists, returns that value object. If not, will create and return a new instance. 
+
+You can supply a function as an optional third argument to specify how the paramters are hashed. This is useful if your value objects have fields that can be more quickly hashed than via JSON.stringify (the default hasher).
 
 ### vo.set
 
@@ -121,10 +138,10 @@ Sets immutable fields on instance. Also adds the `derive` method as a non-enumer
 ### vo.define
 
 ```
-vo.define(field1,field2,field3)
+vo.define(fieldName1 [, fieldNameN ... ])
 ```
 
-Defines a new value object contru
+Defines a new value object constructor with the specified field names.
 
 ### vo#derive
 

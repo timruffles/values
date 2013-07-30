@@ -17,11 +17,14 @@ var p = vo.p = {
   }
 }
 
+p.defaultHasher = function() {
+  return JSON.stringify([].slice.call(arguments))
+}
 
 var memorizeRecursion = false
-vo.memoizedConstructor = function(constructor,params) {
+vo.memoizedConstructor = function(constructor,params,hasher) {
   if(memorizeRecursion) return false
-  var key = JSON.stringify([].slice.call(params))
+  var key = hasher ? hasher.apply(null,params) : p.defaultHasher.apply(null,params)
   var stored = p.findInstance(constructor,key)
   if(stored) return stored
   memorizeRecursion = true

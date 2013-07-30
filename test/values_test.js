@@ -31,6 +31,20 @@ suite("values", function(){
     assert.equal( Period, twoToTen.constructor )
   })
 
+  test("custom hasher", function() {
+    function HasCustom() {
+      var existing = vo.memoizedConstructor(Period,arguments,function(a,b) {
+        return a + b.id
+      });
+      if(existing) return existing;
+      vo.set(this,"a","b",arguments);
+    }
+    var a = new HasCustom("foo",{id: 10});
+    var b = new HasCustom("foo",{id: 10});
+
+    assert.equal( a, b)
+  })
+
   test("has quick definition", function() {
     var oneToTen = new QuickPeriod(1,10)
     assert.equal( 1, oneToTen.from )
@@ -63,6 +77,18 @@ suite("Documentation",function() {
     var b = new Point(0,0)
 
     assert( a == b )
+  })
+
+  test("inequalities", function() {
+    var Set = vo.define("members");
+    Set.prototype.valueOf = function() {
+      return this.members.length;
+    }
+
+    var a = new Set([1,2,3]);
+    var b = new Set([1]);
+
+    assert( a > b )
   })
 })
 

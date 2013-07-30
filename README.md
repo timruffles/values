@@ -1,13 +1,12 @@
 # Values
 
-values is a small library that makes creating immutable ValueObjects with value semantics easy. ValueObjects are defined by value, not identity, and cannot be changed after they're constructed.
-
-Just as you can't conceptually have multiple distinct 'instances' of a number, you don't have multiple instances of a value object with a given set of field values.
+Values is a library for improving application code by adding value semantics. Lots of concepts in our apps don't have a specific 'identity' - for instance every `Point{x: 10, y: 10}` is conceptually the same point. Concepts like this should follow value semantics, namely that two objects are the same if they have the same fields.
 
 In other words, ["two value objects are equal if all their fields are equal"](http://martinfowler.com/bliki/ValueObject.html).
 
-## Value semantics
+In addition, it's great if we ensure that if we have a reference to a value it'll never change. To take our point example, it'd be unfortunate if our `Point{x: 0, y: 0}` was updated to have `x: 1`: as confusing as if the number 1 suddenly got updated to 1.1. To that end value objects should be immutable: you shouldn't be able to change any fields, just create new value objects with different fields.
 
+## Value semantics
 
 So values should be comparable by value. `valueOf` is Javascript's way to do this, but unfortunately it doesn't work for `==` and `===`, only the inquality operators. Equality operations for objects are always based on identity. Values.js works around this by ensuring the same object is returned for the same arguments to a value object constructor.
 

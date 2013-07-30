@@ -7,7 +7,8 @@ var today = MutableDateLibrary.today();
 var event = { at: today, text: "started using values" };
 
 function eventReminder(event) {
-  // `addDays()` is implemented in a mutable fashion, mutating the date
+  // `addDays()` is implemented in a mutable fashion
+  // changing the date in place and returning it
   var remindAt = event.at.addDays(1);
   setReminder(remindAt);
 }

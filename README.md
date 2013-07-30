@@ -2,6 +2,10 @@
 
 values is a small library that makes creating immutable ValueObjects with value semantics easy. ValueObjects are defined by value, not identity, and cannot be changed after they're constructed - just like numbers.
 
+" two value objects are equal if all their fields are equal
+
+Martin Fowler
+
 ## Value semantics
 
 Values should be comparable by value. `valueOf` is Javascript's way to do this, but unfortunately it doesn't work for `==` and `===`, only the inquality operators. Equality operations for objects are always based on identity. Values.js works around this by ensuring the same object is returned for the same arguments to a value object constructor.
@@ -75,6 +79,9 @@ assert(periodA === periodC);
 ```
 
 The derive method takes a hash of named arguments.
+
+You'd use the `derive` method to update references to values in variables or as object properties. Values are used in mutable systems, they're just immutable themselves.
+
 
 ## Philosophy
 

@@ -72,7 +72,7 @@ This [really happens](http://arshaw.com/xdate/#Adding), and we've probably all m
 
 ## Mixin
 
-Rather than requiring you to use a subclassing mechanism, Values.js exposes functions that allow you to compose your own value objects and setup their construcotr and prototype as usual. `vo.memoizedConstructor` is used fulfil the value equality semantics and `vo.set` sets the field values immutably, also adding the [`derive`](#derive) non-enumerable method.
+Rather than requiring you to use a subclassing mechanism, Values.js exposes functions that allow you to compose your own value objects and setup their construcotr and prototype as usual. `vo.memoizedConstructor` is used fulfil the value equality semantics and `vo.set` sets the field values immutably, also adding the [`derive`](#voderive) non-enumerable method.
 
 ```javascript
 var Period = function Period() {
@@ -86,7 +86,7 @@ Period.prototype = vo.createPrototype();
 
 ## Quick definition
 
-A quick way to define VOs which don't require custom behaviour (effectively just doing the above) is also provided.
+A quick way to define VOs which don't require custom constructors (effectively just doing the above) is also provided.
 
 ```javascript
 var Period = vo.define("from","to");

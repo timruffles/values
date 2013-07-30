@@ -3,7 +3,7 @@
 "use strict";
 
 var vo = {}
-var p = vo.p = {
+var p = vo["-private"] = {
   applyConstructor: function(constructor,params) {
     var ValueObject = function() {}
     ValueObject.prototype = constructor.prototype

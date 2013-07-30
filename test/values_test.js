@@ -85,10 +85,11 @@ suite("Documentation",function() {
       return Math.sqrt( Math.pow(this.y2 - this.y1,2) + Math.pow(this.x2 - this.x1,2) );
     }
 
-    var a = new Line(5,10);
-    var b = new Line(19,20);
+    var a = new Line(0, 0,   0, 10);
+    var b = new Line(19,19,  20,20);
 
-    assert( a > b )
+    assert( a > b );
+    assert.equal( 10, a.valueOf() );
   })
 })
 

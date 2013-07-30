@@ -1,13 +1,18 @@
 # Values.js
 
-ValueObjects are immutable and identified by value, not identity. Like numbers, it doesn't make sense to 'change' (mutate) a value, you simply have a new one.
+ValueObjects are immutable and identified by value, not identity. Like numbers, it doesn't make sense to 'change' (mutate) a value, you simply have a new one. Allowing values to change in place leads to confusing semantics:
 
 ```javascript
-var a = 1
-a.set(2)
+var tomorrow = MutableDateLibrary.tomorrow()
+
+someFunction(tomorrow)
+
+// some function changes the value of tomorrow via a mutator
+
+assert( tomorrow === MutableDateLibrary.tomorrow() ) // fails! tomorrow has changed, mutable values have screwed up our semantics
 ```
 
-The above is equally true for: intervals, date ranges, sets of any type.
+The above is equally true for: intervals, ranges, dates and sets of any type.
 
 values.js is a small library for making value objects easily. It has fairly simple goals: ensuring the fields are present, and that the fields when set cannot be changed.
 

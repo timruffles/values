@@ -60,13 +60,11 @@ ValueObjects [should be immutable](http://c2.com/cgi/wiki?ValueObjectsShouldBeIm
 var today = MutableDateLibrary.today();
 var event = { at: today, text: "started using values" };
 
-// `addDays()` is implemented in a mutable fashion
-// changing the date in place and returning it
+// `addDays()` is implemented mutably, changing the date in place and returning it
 var remindAt = event.at.addDays(1);
 
+// fails! today has been changed
 assert( today === MutableDateLibrary.today() );
-// fails! today has been changed in place, mutable values 
-// have screwed up our semantics
 ```
 
 This [really happens](http://arshaw.com/xdate/#Adding), and we've probably all made something that should be a value type mutable. The above is equally true for: intervals, ranges, dates and sets of any type.

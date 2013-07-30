@@ -3,16 +3,21 @@
 ValueObjects are immutable and identified by value, not identity. Like numbers, it doesn't make sense to 'change' (mutate) a value, you simply have a new one. Allowing values to change in place leads to confusing semantics:
 
 ```javascript
-var tomorrow = MutableDateLibrary.tomorrow()
+var today = MutableDateLibrary.today();
+var event = { at: today, text: "started using values" };
 
-someFunction(tomorrow)
+function eventReminder(event) {
+  // `addDays()` is implemented in a mutable fashion, mutating the date
+  var remindAt = event.at.addDays(1);
+  setReminder(remindAt);
+}
 
-// some function changes the value of tomorrow via a mutator
+eventReminder(event);
 
-assert( tomorrow === MutableDateLibrary.tomorrow() ) // fails! tomorrow has changed, mutable values have screwed up our semantics
+assert( today === MutableDateLibrary.today() ); // fails! tomorrow has changed, mutable values have screwed up our semantics
 ```
 
-The above is equally true for: intervals, ranges, dates and sets of any type.
+This [really happens](http://arshaw.com/xdate/#Adding), and we've probably all made something that should be a value type mutable. The above is equally true for: intervals, ranges, dates and sets of any type.
 
 values.js is a small library for making value objects easily. It has fairly simple goals: ensuring the fields are present, and that the fields when set cannot be changed.
 
@@ -20,7 +25,7 @@ Values should be comparable by value. `valueOf` is Javascript's way to do this, 
 
 ```javascript
 var oneToTen = new Range(1,10);
-var naturalNumbersUnderEleven = new Range(1,10)
+var naturalNumbersUnderEleven = new Range(1,10);
 
 assert( oneToTen === naturalNumbersUnderEleven );
 ```
@@ -61,11 +66,6 @@ The derive method takes position arguments, or a hash of named arguments.
 
 ## Philosophy
 
-- Light-weight
+- Small
 - Contracts upheld strongly in all ES5 environments
-- immutability assures application level validity, so your unit tests will catch any probs in es5/6, even if some browsers will run without immutability
-	
-## Other ideas
-
-- WeakMap for constructor caching and ===, Map/obj with manual limits on objects cached for older browsers
-- .eql .equal .isEqual
+- Immutability is about ensuring application level validity, so your unit tests will catch any problems when run in es5/6. If you have good coverage, it doesn't matter if older browsers (IE7) won't enforce immutability themselves.

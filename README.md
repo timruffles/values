@@ -33,7 +33,8 @@ function eventReminder(event) {
 eventReminder(event);
 
 assert( today === MutableDateLibrary.today() );
-// fails! tomorrow has changed, mutable values have screwed up our semantics
+// fails! today has been changed in place, mutable values 
+// have screwed up our semantics
 ```
 
 This [really happens](http://arshaw.com/xdate/#Adding), and we've probably all made something that should be a value type mutable. The above is equally true for: intervals, ranges, dates and sets of any type.

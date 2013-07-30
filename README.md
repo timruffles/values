@@ -74,7 +74,7 @@ This [really happens](http://arshaw.com/xdate/#Adding), and we've probably all m
 Rather than requiring you to use a subclassing mechanism, Values.js exposes functions that allow you to compose your own value objects and setup their constructor and prototype as usual. `vo.memoizedConstructor` is used fulfil the value equality semantics and `vo.set` sets the field values immutably, also adding the [`derive`](#voderive) non-enumerable method.
 
 ```javascript
-var Period = function Period() {
+var Period = function() {
   var existing = vo.memoizedConstructor(Period,arguments);
   if(existing) return existing;
   vo.set(this,"from","to",arguments);

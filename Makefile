@@ -1,6 +1,6 @@
 .PHONY : test
 
 test:
-	node --ui tdd
+	mocha --ui tdd
 
 

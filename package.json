@@ -4,7 +4,7 @@
   "description": "Implementation of ValueObjects for Javascript and node",
   "keywords": ["value objects","values","immutable"],
   "devDependencies": {
-    "buster": "> 0"
+    "mocha": "> 0"
   },
   "repository": "git@github.com:timruffles/values.git",
   "files": [

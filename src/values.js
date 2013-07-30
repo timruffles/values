@@ -5,9 +5,9 @@
 var vo = {}
 var p = vo.p = {
   applyConstructor: function(constructor,params) {
-    var Temp = function() {}
-    Temp.prototype = constructor.prototype
-    var instance = new Temp()
+    var ValueObject = function() {}
+    ValueObject.prototype = constructor.prototype
+    var instance = new ValueObject()
     var retVal = constructor.apply(instance,params)
     return typeof retVal === "object" ? retVal : instance
   },

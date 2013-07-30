@@ -1,72 +1,34 @@
-buster.testCase("values",{
-	"value objects must have all fields": function() {
-		var VO = vo.valueObjectConstructor("field");
-		assert.exception(function() {
-			new VO;
-		});
-	},
-	"value objects must have the correct number of fields": function() {
-		var VO = vo.valueObjectConstructor("field");
-		assert.exception(function() {
-			new VO("a","b");
-		});
-	},
-	"value objects' fields are immutable": function() {
-		var VO = vo.valueObjectConstructor("field");
-		assert.exception(function() {
-			var instance = new VO("value");
-			instance.field = "new value";
-		});
-	},
-	"revised creates new versions of value objects based on old ones": function() {
-		var VO = vo.valueObjectConstructor("field");
+var Period, oneToTen, naturalNumbersUnderEleven, twoToTen
 
-		var instance = new VO("value");
+buster.testCase("values", {
+  "beforeAll": function() {
+    Period = function Period() {
+      var existing = vo.memoizedConstructor(Period,arguments);
+      if(existing) return existing;
+      vo.set(this,"from","to",arguments);
+    }
+    oneToTen = new Period(1,10);
+    naturalNumbersUnderEleven = new Period(1,10)
+    twoToTen = oneToTen.derive({from: 2})
+  },
+  "it defines accessors": function() {
+    assert.equal( 10, oneToTen.to )
+  },
+  "it returns the same instance for a vo of same type with same fields": function() {
+    assert.equal( oneToTen, naturalNumbersUnderEleven )
+  },
+  "derive doesn't affect existing vo": function() {
+    assert.equal( 1, oneToTen.from )
+    assert.equal( 10, oneToTen.to )
+  },
+  "derive is based on old": function() {
+    assert( twoToTen.from === 2 )
+    assert( twoToTen.to   === 10 )
+    assert( twoToTen.constructor === Period )
+  }
+})
 
-		var newValue = "new value";
-		var revisedVo = vo.revised(instance,{field: newValue});
 
-		assert.same(newValue,revisedVo.field)
-	},
-	"revised does not affect old versions": function() {
-		var VO = vo.valueObjectConstructor("field");
 
-		var instance = new VO("value");
-		var originalValue = instance.field;
 
-		var newValue = "new value";
-		var revisedVo = vo.revised(instance,{field: newValue});
 
-		assert.same(originalValue,instance.field);
-	},
-
-	"valueObjectConstructor allows use of an initalizer": function() {
-		var initSpy = sinon.spy();
-		var val = "value";
-		var VO = vo.valueObjectConstructor("field",initSpy);
-
-		new VO(val);
-
-		assert.calledOnceWith(initSpy,val);
-	},
-
-	"valueObject gives you a way of extending existing constructors": function() {
-		var VO = function() {
-			vo.valueObject(this,"field",arguments);
-		};
-		assert.exception(function() {
-			new VO;
-		});
-		assert.exception(function() {
-			var instance = new VO("value");
-			instance.field = "new value";
-		});
-		var instance = new VO("value");
-		assert.same("value",instance.field);
-
-		var newValue = "new value";
-		var newInstance = vo.revised(instance,{field: newValue});
-		assert.same("value",instance.field);
-		assert.same(newValue,newInstance.field);
-	}
-});

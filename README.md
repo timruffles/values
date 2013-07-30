@@ -148,7 +148,7 @@ Defines a new value object constructor with the specified field names.
 aValueObject.derive(newValuesMap)
 ```
 
-Instance method that returns: a new value object with field values taken by preference from newValuesMap, with any missing fields taken from the existing value object `derive` is called on.
+Instance method that returns a new value object with field values taken by preference from newValuesMap, with any missing fields taken from the existing value object `derive` is called on.
 
 ## Philosophy
 

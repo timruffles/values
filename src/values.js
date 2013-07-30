@@ -22,25 +22,25 @@ var memorizeRecursion = false
 vo.memoizedConstructor = function(constructor,params) {
   if(memorizeRecursion) return false
   var key = JSON.stringify([].slice.call(params))
-  var stored = vo.findInstance(constructor,key)
+  var stored = p.findInstance(constructor,key)
   if(stored) return stored
   memorizeRecursion = true
   var created = p.applyConstructor(constructor,params)
-  vo.storeInstance(constructor,key,created)
+  p.storeInstance(constructor,key,created)
   memorizeRecursion = false
   return created
 }
 
-vo.findConstructorInstances = function(constructor) {
+p.findConstructorInstances = function(constructor) {
   return p.memoizedStore[constructor] || (p.memoizedStore[constructor] = {})
 }
 
-vo.findInstance = function(constructor,key) {
-  return vo.findConstructorInstances(constructor)[key]
+p.findInstance = function(constructor,key) {
+  return p.findConstructorInstances(constructor)[key]
 }
 
-vo.storeInstance = function(constructor,key,instance) {
-  return vo.findConstructorInstances(constructor)[key] = instance
+p.storeInstance = function(constructor,key,instance) {
+  return p.findConstructorInstances(constructor)[key] = instance
 }
 
 vo.set = function(instance) {

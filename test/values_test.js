@@ -80,13 +80,13 @@ suite("Documentation",function() {
   })
 
   test("inequalities", function() {
-    var Set = vo.define("members");
-    Set.prototype.valueOf = function() {
-      return this.members.length;
+    var Line = vo.define("x1","y1","x2","y2");
+    Line.prototype.valueOf = function() {
+      return Math.sqrt( Math.pow(this.y2 - this.y1,2) + Math.pow(this.x2 - this.x1,2) );
     }
 
-    var a = new Set([1,2,3]);
-    var b = new Set([1]);
+    var a = new Line(5,10);
+    var b = new Line(19,20);
 
     assert( a > b )
   })

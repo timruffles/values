@@ -1,12 +1,15 @@
 # Values
 
-values is a small library that makes creating immutable ValueObjects with value semantics easy. ValueObjects are defined by value, not identity, and cannot be changed after they're constructed - just like numbers.
+values is a small library that makes creating immutable ValueObjects with value semantics easy. ValueObjects are defined by value, not identity, and cannot be changed after they're constructed.
+
+Just as you can't conceptually have multiple distinct 'instances' of a number, you don't have multiple instances of a value object with a given set of field values.
 
 In other words, ["two value objects are equal if all their fields are equal"](http://martinfowler.com/bliki/ValueObject.html).
 
 ## Value semantics
 
-Values should be comparable by value. `valueOf` is Javascript's way to do this, but unfortunately it doesn't work for `==` and `===`, only the inquality operators. Equality operations for objects are always based on identity. Values.js works around this by ensuring the same object is returned for the same arguments to a value object constructor.
+
+So values should be comparable by value. `valueOf` is Javascript's way to do this, but unfortunately it doesn't work for `==` and `===`, only the inquality operators. Equality operations for objects are always based on identity. Values.js works around this by ensuring the same object is returned for the same arguments to a value object constructor.
 
 ```javascript
 var oneToTen = new Range(1,10);
@@ -95,6 +98,14 @@ vo.set(instance,fields,fieldValues)
 ```
 
 Sets immutable fields on instance. Also adds the `derive` method as a non-enumerable property.
+
+### vo.define
+
+```
+vo.define(field1,field2,field3)
+```
+
+Defines a new value object contru
 
 ### vo#derive
 

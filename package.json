@@ -1,10 +1,12 @@
 {
   "name": "values",
   "version": "0.0.1",
+  "author": "Tim Ruffles <timruffles@gmail.com>",
   "description": "Implementation of ValueObjects for Javascript and node",
-  "keywords": ["value objects","values","immutable"],
+  "keywords": ["value objects","values","immutable","oop"],
   "devDependencies": {
-    "mocha": "> 0"
+    "mocha": "> 0",
+    "mocha-phantomjs": "> 0"
   },
   "repository": "git@github.com:timruffles/values.git",
   "files": [

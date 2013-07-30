@@ -1,5 +1,4 @@
 ;(function() {
-
 "use strict";
 
 var vo = {}
@@ -97,6 +96,8 @@ if(typeof module != "undefined") {
 }
 if(typeof define != "undefined") {
   define("values",vo)
+} else if(typeof window != "undefined") {
+  window.vo = vo
 }
 
 })();

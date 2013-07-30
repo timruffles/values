@@ -1,4 +1,4 @@
-var Period, oneToTen, naturalNumbersUnderEleven, twoToTen
+var Period, oneToTen, naturalNumbersUnderEleven, twoToTen, QuickPeriod
 
 suite("values", function(){
   before(function() {
@@ -10,6 +10,8 @@ suite("values", function(){
     oneToTen = new Period(1,10);
     naturalNumbersUnderEleven = new Period(1,10)
     twoToTen = oneToTen.derive({from: 2})
+
+    QuickPeriod = vo.define("from","to")
   })
 
   test("it defines accessors", function() {
@@ -27,6 +29,17 @@ suite("values", function(){
     assert.equal( 2, twoToTen.from )
     assert.equal( 10, twoToTen.to )
     assert.equal( Period, twoToTen.constructor )
+  })
+
+  test("has quick definition", function() {
+    var oneToTen = new QuickPeriod(1,10)
+    assert.equal( 1, oneToTen.from )
+    assert.equal( 10, oneToTen.to )
+
+    var twoToTen = oneToTen.derive({from: 2})
+    assert.equal( 2, twoToTen.from )
+    assert.equal( 10, twoToTen.to )
+    assert.equal( QuickPeriod, twoToTen.constructor )
   })
 
 })

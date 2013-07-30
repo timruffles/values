@@ -53,7 +53,7 @@ Period.prototype = vo.createPrototype();
 A quick way to define VOs which don't require custom behaviour (effectively just doing the above) is also provided.
 
 ```javascript
-var QuickPeriod = vo.define("Period","from","to");
+var Period = vo.define("from","to");
 ```
 
 ## 'Changing' a value via `derive`

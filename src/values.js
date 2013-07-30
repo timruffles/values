@@ -54,7 +54,7 @@ vo.set = function(instance) {
 }
 
 p.validateFields = function(fields,args) {
-  p.assert(args.length === fields.length,"Missing fields: " + fields.join(", "))
+  p.assert(args.length === fields.length,"Wrong number of fields, expected " + fields.length + " got " + args.length);
   var missing = args.reduce(function(missingFields,arg,index) {
     return arg === undefined ? missingFields.concat(fields[index]) : missingFields;
   },[])

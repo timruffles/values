@@ -23,14 +23,9 @@ ValueObjects [should be immutable](http://c2.com/cgi/wiki?ValueObjectsShouldBeIm
 var today = MutableDateLibrary.today();
 var event = { at: today, text: "started using values" };
 
-function eventReminder(event) {
-  // `addDays()` is implemented in a mutable fashion
-  // changing the date in place and returning it
-  var remindAt = event.at.addDays(1);
-  setReminder(remindAt);
-}
-
-eventReminder(event);
+// `addDays()` is implemented in a mutable fashion
+// changing the date in place and returning it
+var remindAt = event.at.addDays(1);
 
 assert( today === MutableDateLibrary.today() );
 // fails! today has been changed in place, mutable values 

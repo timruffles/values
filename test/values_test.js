@@ -42,6 +42,28 @@ suite("values", function(){
     assert.equal( QuickPeriod, twoToTen.constructor )
   })
 
+
+})
+
+suite("Documentation",function() {
+  test("problem definition works", function() {
+    function Point(x,y) {
+      this.x = x;
+      this.y = y;
+    }
+    var a = new Point(0,0)
+    var b = new Point(0,0)
+
+    assert.equal( false, a == b )
+  })
+
+  test("solution example works", function() {
+    var Point = vo.define("x","y");
+    var a = new Point(0,0)
+    var b = new Point(0,0)
+
+    assert( a == b )
+  })
 })
 
 

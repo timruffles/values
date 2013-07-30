@@ -36,7 +36,7 @@ var b = new Range(1,10);
 assert( a === b );
 ```
 
-If your value object can meaningfully use the inequality operators (`>`, `<`) - for instance a set can be bigger than another set - then define a `valueOf` method to return a comparable value (a String or Number). That'll cover all comparisons for your value object!
+If your value object can meaningfully use the inequality operators `<`, `>` - for instance a set can be bigger than another set - then define a `valueOf` method to return a comparable value (a String or Number). That'll cover all comparisons for your value object!
 
 
 ```javascript

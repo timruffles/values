@@ -20,7 +20,7 @@ var naturalNumbersUnderEleven = new Range(1,10)
 assert( oneToTen === naturalNumbersUnderEleven );
 ```
 
-Rather than requiring you to use a subclassing mechanism, Values.js exposes the internals to use. `vo.memoizedConstructor` is used fulfil the value equality semantics; `vo.set` sets the field values immutably; `vo.createPrototype()` creates a prototype object for VOs, or to mix in VO behaviour.
+Rather than requiring you to use a subclassing mechanism, Values.js exposes the internals to use. `vo.memoizedConstructor` is used fulfil the value equality semantics and `vo.set` sets the field values immutably, also adding the `derive` non-enumerable method.
 
 ```javascript
 var Period = function Period() {

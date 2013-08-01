@@ -69,6 +69,8 @@ assert( today === MutableDateLibrary.today() );
 
 This [really happens](http://arshaw.com/xdate/#Adding), and we've probably all made something that should be a value type mutable. The above is equally true for: intervals, ranges, dates and sets of any type.
 
+Value objects created by Values are immutable - you can't change fields in ES5, and trying to do so in strict mode will raise an exception. If your unit tests enforce immutable use of your value objects, your application will be correct even in non ES5 environements.
+
 ## Mixin
 
 Rather than requiring you to use a subclassing mechanism, Values.js exposes functions that allow you to compose your own value objects and setup their constructor and prototype as usual. `vo.memoizedConstructor` is used fulfil the value equality semantics and `vo.set` sets the field values immutably, also adding the [`derive`](#voderive) non-enumerable method.
@@ -79,8 +81,6 @@ var Period = function() {
   if(existing) return existing;
   vo.set(this,"from","to",arguments);
 };
-
-Period.prototype = vo.createPrototype();
 ```
 
 ## Quick definition

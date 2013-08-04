@@ -1,17 +1,29 @@
 var Period, oneToTen, naturalNumbersUnderEleven, twoToTen, QuickPeriod
 
 suite("values", function(){
-  before(function() {
-    Period = function Period() {
-      var existing = vo.memoizedConstructor(Period,arguments);
+  beforeEach(function() {
+    Period = function() {
+      var existing = vo.memoizedConstructor(Period,this,arguments);
       if(existing) return existing;
-      vo.set(this,"from","to",arguments);
+      vo.setup(this,periodFields,arguments);
+    }
+    var periodFields = ["from","to"]
+    if(typeof Object.defineProperties == "undefined") {
+      // for old browsers, setup derive as a prototype field
+      Period.prototype.derive = vo.deriver(periodFields)
     }
     oneToTen = new Period(1,10);
     naturalNumbersUnderEleven = new Period(1,10)
     twoToTen = oneToTen.derive({from: 2})
 
     QuickPeriod = vo.define("from","to")
+  })
+
+  test("derive is defined as a non-enumerable or prototype method in browser with and without Object.defineProprties respectively",function() {
+    for(var prop in oneToTen) {
+      if(!oneToTen.hasOwnProperty(prop)) continue
+      assert.notEqual( "derive", prop, "shouldn't see derive" )
+    }
   })
 
   test("it defines accessors", function() {
@@ -28,16 +40,15 @@ suite("values", function(){
   test("derive is based on old", function() {
     assert.equal( 2, twoToTen.from )
     assert.equal( 10, twoToTen.to )
-    assert.equal( Period, twoToTen.constructor )
   })
 
   test("custom hasher", function() {
     function HasCustom() {
-      var existing = vo.memoizedConstructor(Period,arguments,function(a,b) {
+      var existing = vo.memoizedConstructor(Period,this,arguments,function(a,b) {
         return a + b.id
       });
       if(existing) return existing;
-      vo.set(this,"a","b",arguments);
+      vo.setup(this,["a","b"],arguments);
     }
     var a = new HasCustom("foo",{id: 10});
     var b = new HasCustom("foo",{id: 10});
@@ -54,6 +65,13 @@ suite("values", function(){
     assert.equal( 2, twoToTen.from )
     assert.equal( 10, twoToTen.to )
     assert.equal( QuickPeriod, twoToTen.constructor )
+  })
+
+  test("caching doesn't confuse constructors", function() {
+    var oneToTen = new QuickPeriod(1,10)
+    var Type = vo.define("a","b")
+    assert.equal( Type, new Type(1,10).constructor )
+    assert.equal( QuickPeriod, oneToTen.constructor )
   })
 
 

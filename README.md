@@ -73,14 +73,21 @@ Value objects created by Values are immutable - you can't change fields in ES5, 
 
 ## Mixin
 
-Rather than requiring you to use a subclassing mechanism, Values.js exposes functions that allow you to compose your own value objects and setup their constructor and prototype as usual. `vo.memoizedConstructor` is used fulfil the value equality semantics and `vo.set` sets the field values immutably, also adding the [`derive`](#voderive) non-enumerable method.
+Rather than requiring you to use a subclassing mechanism, Values.js exposes functions that allow you to compose your own value objects and setup their constructor and prototype as usual. `vo.memoizedConstructor` is used fulfil the value equality semantics and `vo.setup` sets the field values immutably, also adding the [`derive`](#voderive) non-enumerable method.
 
 ```javascript
 var Period = function() {
-  var existing = vo.memoizedConstructor(Period,arguments);
+  var existing = vo.memoizedConstructor(Period,this,arguments);
   if(existing) return existing;
-  vo.set(this,"from","to",arguments);
+  vo.setup(this,periodFields,arguments);
 };
+var periodFields = ["from","to"];
+```
+
+For IE <= 8 support, if you want `derive` you'll need to add it to the prototype. In newer browsers, it's added as a non-enumerable (e.g doesn't appear in `for .. in` loops) property in `setup`:
+
+```
+Period.prototype.derive = vo.deriver(periodFields)
 ```
 
 ## Quick definition
@@ -126,10 +133,10 @@ If a value object of same type with the same fields exists, returns that value o
 
 You can supply a function as an optional third argument to specify how the paramters are hashed. This is useful if your value objects have fields that can be more quickly hashed than via JSON.stringify (the default hasher).
 
-### vo.set
+### vo.setup
 
 ```javascript
-vo.set(instance,fields,fieldValues)
+vo.setup(instance,fields,fieldValues)
 ```
 
 Sets immutable fields on instance. Also adds the `derive` method as a non-enumerable property.
@@ -153,5 +160,5 @@ Instance method that returns a new value object with field values taken by prefe
 ## Philosophy
 
 - Small
-- Contracts upheld strongly in all ES5 environments
-- Immutability is about ensuring application level validity, so your unit tests will catch any problems when run in es5/6. If you have good coverage, it doesn't matter if older browsers (IE7) won't enforce immutability themselves.
+- Contracts upheld strongly in all ES5 environments (with strict mode)
+- Immutability is about ensuring application level validity, so your unit tests will catch any problems when run in ES5/6. If you have good coverage, it doesn't matter if older browsers (IE7) won't enforce immutability at run-time.

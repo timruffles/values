@@ -4102,13 +4102,9 @@ Runnable.prototype.run = function(fn){
   }
 
   // sync
-  try {
     if (!this.pending) this.fn.call(ctx);
     this.duration = new Date - start;
     fn();
-  } catch (err) {
-    fn(err);
-  }
 };
 
 }); // module: runnable.js

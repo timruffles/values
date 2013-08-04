@@ -64,7 +64,7 @@ var event = { at: today, text: "started using values" };
 var remindAt = event.at.addDays(1);
 
 // fails! today has been changed
-assert( today === MutableDateLibrary.today() );
+assert( today.timestamp() === MutableDateLibrary.today().timestamp() );
 ```
 
 This [really happens](http://arshaw.com/xdate/#Adding), and we've probably all made something that should be a value type mutable. The above is equally true for: intervals, ranges, dates and sets of any type.

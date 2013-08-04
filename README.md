@@ -126,7 +126,7 @@ You'd use the `derive` method to update references to values in variables or as 
 ### vo.memoizedConstructor
 
 ```javascript
-vo.memoizedConstructor(constructor,params [, parameterHasher] )
+vo.memoizedConstructor(constructor,instance,params [, parameterHasher] )
 ```
 
 If a value object of same type with the same fields exists, returns that value object. If not, will create and return a new instance. 

@@ -27,7 +27,7 @@ assert( a == b ); // succeeds - follows value semantics
 
 ## Value semantics
 
-So values should be comparable by value. `valueOf` is the method JS gives us to control how our objects are compared, but unfortunately it doesn't work for `==` and `===`, only the inquality operators. Equality operations for objects are always based on identity. Values.js works around this by ensuring the same object is returned for the same arguments to a value object constructor.
+So values should be comparable by value. `valueOf` is the method JS gives us to control how our objects are compared, but unfortunately it doesn't work for `==` and `===`, only the inequality operators. Equality operations for objects are always based on identity. Values.js works around this by ensuring the same object is returned for the same arguments to a value object constructor.
 
 ```javascript
 var a = new Range(1,10);
@@ -42,7 +42,7 @@ If your value object can meaningfully use the inequality operators `<`, `>` - fo
 ```javascript
 var Line = vo.define("x1","y1","x2","y2");
 Line.prototype.valueOf = function() {
-  // pythagoras' theorem
+  // Pythagorus' theorem
   return Math.sqrt( Math.pow(this.y2 - this.y1,2) + Math.pow(this.x2 - this.x1,2) );
 }
 
@@ -69,7 +69,7 @@ assert( today.timestamp() === MutableDateLibrary.today().timestamp() );
 
 This [really happens](http://arshaw.com/xdate/#Adding), and we've probably all made something that should be a value type mutable. The above is equally true for: intervals, ranges, dates and sets of any type.
 
-Value objects created by Values are immutable - you can't change fields in ES5, and trying to do so in strict mode will raise an exception. If your unit tests enforce immutable use of your value objects, your application will be correct even in non ES5 environements.
+Value objects created by Values are immutable - you can't change fields in ES5, and trying to do so in strict mode will raise an exception. If your unit tests enforce immutable use of your value objects, your application will be correct even in non ES5 environments.
 
 ## Mixin
 
@@ -103,7 +103,7 @@ var Period = vo.define("from","to");
 
 <a id="derive"></a>
 
-To create a new version of a value object based on an old one, use the `derive` method. This eases the creation of modified value objects, without losing the benfits of their immutability.
+To create a new version of a value object based on an old one, use the `derive` method. This eases the creation of modified value objects, without losing the benefits of their immutability.
 
 ```javascript
 var periodA = new Period(2012,2015);
@@ -131,7 +131,7 @@ vo.memoizedConstructor(constructor,instance,params [, parameterHasher] )
 
 If a value object of same type with the same fields exists, returns that value object. If not, will create and return a new instance. 
 
-You can supply a function as an optional third argument to specify how the paramters are hashed. This is useful if your value objects have fields that can be more quickly hashed than via JSON.stringify (the default hasher).
+You can supply a function as an optional third argument to specify how the parameters are hashed. This is useful if your value objects have fields that can be more quickly hashed than via JSON.stringify (the default hasher).
 
 ### vo.setup
 

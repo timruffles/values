@@ -25,6 +25,12 @@ var b = new Point(0,0);
 assert( a == b ); // succeeds - follows value semantics
 ```
 
+## Install
+
+`npm install values`
+
+values supports require.js and other AMD loaders, or you can simply include it as normal and it'll define `window.vo`.
+
 ## Value semantics
 
 So values should be comparable by value. `valueOf` is the method JS gives us to control how our objects are compared, but unfortunately it doesn't work for `==` and `===`, only the inequality operators. Equality operations for objects are always based on identity. Values.js works around this by ensuring the same object is returned for the same arguments to a value object constructor.

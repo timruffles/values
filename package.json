@@ -1,6 +1,6 @@
 {
   "name": "values",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Tim Ruffles <timruffles@gmail.com>",
   "description": "Implementation of ValueObjects for Javascript and node",
   "keywords": ["value objects","values","immutable","oop"],

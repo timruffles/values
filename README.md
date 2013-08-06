@@ -91,12 +91,6 @@ var periodFields = ["from","to"];
 vo.setupPrototype(Period,periodFields)
 ```
 
-For IE <= 8 support, if you want `derive` you'll need to add it to the prototype. In newer browsers, it's added as a non-enumerable (e.g doesn't appear in `for .. in` loops) property in `setup`:
-
-```
-Period.prototype.derive = vo.deriver(periodFields)
-```
-
 ## Quick definition
 
 A quick way to define VOs which don't require custom constructors (effectively just doing the above) is also provided.
@@ -104,7 +98,6 @@ A quick way to define VOs which don't require custom constructors (effectively j
 ```javascript
 var Period = vo.define("from","to");
 ```
-
 
 ## 'Changing' a value via `derive`
 
@@ -146,7 +139,15 @@ You can supply a function as an optional third argument to specify how the param
 vo.setup(instance,fields,fieldValues)
 ```
 
-Sets immutable fields on instance. Also adds the `derive` method as a non-enumerable property.
+Sets immutable fields on instance.
+
+### vo.setupPrototype
+
+```javascript
+vo.setupPrototype(constructor,fields)
+```
+
+Adds the `derive` method, and the `fields` array it needs, to the constructor's prototype.
 
 ### vo.define
 

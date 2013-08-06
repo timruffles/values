@@ -79,7 +79,7 @@ Value objects created by Values are immutable - you can't change fields in ES5, 
 
 ## Mixin
 
-Rather than requiring you to use a subclassing mechanism, Values.js exposes functions that allow you to compose your own value objects and setup their constructor and prototype as usual. `vo.memoizedConstructor` is used fulfil the value equality semantics and `vo.setup` sets the field values immutably. Finally, `vo.setupPrototype` adds the [`derive`](#voderive) method and `fields` array it uses to the prototype.
+Rather than requiring you to use a subclassing mechanism, Values.js exposes functions that allow you to compose your own value objects and setup their constructor and prototype as usual. `vo.memoizedConstructor` is used to fulfil the value equality semantics and `vo.setup` sets the field values immutably. Finally, `vo.setupPrototype` adds the [`derive`](#voderive) method and `fields` array it uses to the prototype.
 
 ```javascript
 var Period = function() {

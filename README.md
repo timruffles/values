@@ -167,9 +167,9 @@ Instance method that returns a new value object with field values taken by prefe
 
 ## Memory
 
-With `WeakMap` values that are no longer referenced are available to be garbage collected just like any other Javascript oject.
+In environments with `WeakMap` ([ES Harmony](http://tc39wiki.calculist.org/es6/weak-map/)) values that are no longer referenced are available to be garbage collected just like any other Javascript object.
 
-In environments without `WeakMap` all of the instances will be retained. If you ensure your value objects contain only scalar values and a small set of strings this shouldn't be an issue.
+In environments without `WeakMap` all value objects will be retained. If you ensure your value objects are themselves small (especially avoiding them holding references to large objects) this should be fine.
 
 For instance, if we create 100,000 `Point`, and 100,000 `Person`, objects:
 
@@ -181,7 +181,9 @@ var Person = vo.define("name","age");
 for(var i=0; i < 1e5; i++) new Person(Math.random().toString(),Math.random());
 ```
 
-we use 10mb of memory: 4mb for the points, and 6mb for the people (2mb for names). Does this matter? It depends on your application. The above is a worst case as none of the instances or strings are shared. However, since value semantics make sense when you have values that are identical, 200k value objects in 10mb (or 1million in 50mb) gives you a lot of room.
+we use 10mb of memory: 4mb for the points, and 6mb for the people.
+
+Does this matter? It depends. The above is a worst case as none of the instances or strings are shared. However, since value semantics make sense when you have values that are identical, 200k value objects in 10mb (or 1 million in 50mb) gives your application a lot of room.
 
 ## Modification/extension
 
@@ -190,6 +192,6 @@ Values is designed to be extremely extensible, so uses only advisory privacy. Th
 
 ## Philosophy
 
-- Small
+- Small (~160 lines, <1.5kb uglified + gzipped)
 - Contracts upheld strongly in all ES5 environments (with strict mode)
 - Immutability is about ensuring application level validity, so your unit tests will catch any problems when run in ES5/6. If you have good coverage, it doesn't matter if older browsers (IE7) won't enforce immutability at run-time.

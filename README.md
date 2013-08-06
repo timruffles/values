@@ -79,7 +79,7 @@ Value objects created by Values are immutable - you can't change fields in ES5, 
 
 ## Mixin
 
-Rather than requiring you to use a subclassing mechanism, Values.js exposes functions that allow you to compose your own value objects and setup their constructor and prototype as usual. `vo.memoizedConstructor` is used fulfil the value equality semantics and `vo.setup` sets the field values immutably, also adding the [`derive`](#voderive) non-enumerable method.
+Rather than requiring you to use a subclassing mechanism, Values.js exposes functions that allow you to compose your own value objects and setup their constructor and prototype as usual. `vo.memoizedConstructor` is used fulfil the value equality semantics and `vo.setup` sets the field values immutably. Finally, `vo.setupPrototype` adds the [`derive`](#voderive) method and `fields` array it uses to the prototype.
 
 ```javascript
 var Period = function() {
@@ -88,6 +88,7 @@ var Period = function() {
   vo.setup(this,periodFields,arguments);
 };
 var periodFields = ["from","to"];
+vo.setupPrototype(Period,periodFields)
 ```
 
 For IE <= 8 support, if you want `derive` you'll need to add it to the prototype. In newer browsers, it's added as a non-enumerable (e.g doesn't appear in `for .. in` loops) property in `setup`:
@@ -162,6 +163,29 @@ aValueObject.derive(newValuesMap)
 ```
 
 Instance method that returns a new value object with field values taken by preference from newValuesMap, with any missing fields taken from the existing value object `derive` is called on.
+
+## Memory
+
+With `WeakMap` values that are no longer referenced are available to be garbage collected just like any other Javascript oject.
+
+In environments without `WeakMap` all of the instances will be retained. If you ensure your value objects contain only scalar values and a small set of strings this shouldn't be an issue.
+
+For instance, if we create 100,000 `Point`, and 100,000 `Person`, objects:
+
+```
+var Point = vo.define("x","y");
+for(var i=0; i < 1e5; i++) new Point(Math.random(),Math.random());
+
+var Person = vo.define("name","age");
+for(var i=0; i < 1e5; i++) new Person(Math.random().toString(),Math.random());
+```
+
+we use 10mb of memory: 4mb for the points, and 6mb for the people (2mb for names). Does this matter? It depends on your application. The above is a worst case as none of the instances or strings are shared. However, since value semantics make sense when you have values that are identical, 200k value objects in 10mb (or 1million in 50mb) gives you a lot of room.
+
+## Modification/extension
+
+Values is designed to be extremely extensible, so uses only advisory privacy. This allows redefinition of its implementation without modifying the code (and therefore having to maintain a patched version). [This post](http://sidekicksrc.com/post/productive-advisory-privacy/) explains how to modify public and private function behaviour.
+
 
 ## Philosophy
 

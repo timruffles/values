@@ -8,10 +8,8 @@ suite("values", function(){
       vo.setup(this,periodFields,arguments);
     }
     var periodFields = ["from","to"]
-    if(typeof Object.defineProperties == "undefined") {
-      // for old browsers, setup derive as a prototype field
-      Period.prototype.derive = vo.deriver(periodFields)
-    }
+    // for old browsers, setup derive as a prototype field
+    vo.setupPrototype(Period,periodFields);
     oneToTen = new Period(1,10);
     naturalNumbersUnderEleven = new Period(1,10)
     twoToTen = oneToTen.derive({from: 2})
@@ -50,6 +48,8 @@ suite("values", function(){
       if(existing) return existing;
       vo.setup(this,["a","b"],arguments);
     }
+    vo.setupPrototype(HasCustom,["a","b"]);
+
     var a = new HasCustom("foo",{id: 10});
     var b = new HasCustom("foo",{id: 10});
 

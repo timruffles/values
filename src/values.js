@@ -17,14 +17,6 @@ vo.memoizedConstructor = function(constructor,instance,params,hasher) {
   return created
 }
 
-vo.deriver = function(fields) {
-  return function(attrs) {
-    var update = p.map(fields,function(field) {
-      return attrs[field] == null ? this[field] : attrs[field]
-    },this)
-    return p.applyConstructor(this.constructor,update)
-  }
-}
 
 vo.setup = function(instance,fields,args) {
   args = [].slice.call(args)
@@ -34,16 +26,27 @@ vo.setup = function(instance,fields,args) {
 
 vo.define = function() {
   var fields = [].slice.call(arguments)
-  function constructor() {
-    var existing = vo.memoizedConstructor(constructor,this,arguments)
+  function ValueObject() {
+    var existing = vo.memoizedConstructor(ValueObject,this,arguments)
     if(existing) return existing
     vo.setup.call(null,this,fields,arguments)
   }
-  constructor.prototype.derive = vo.deriver(fields)
-  return constructor
+  vo.setupPrototype(ValueObject,fields)
+  return ValueObject
+}
+
+vo.setupPrototype = function(type,fields) {
+  type.prototype.fields = fields
+  type.prototype.derive = p.derive
 }
 
 p = vo["-private"] = {
+  derive: function(attrs) {
+    var update = p.map(this.fields,function(field) {
+      return attrs[field] == null ? this[field] : attrs[field]
+    },this)
+    return p.applyConstructor(this.constructor,update)
+  },
   defineProperties: Object.defineProperties || function(obj,props) {
     for(var prop in props) {
       if(!props.hasOwnProperty(prop)) continue
@@ -144,11 +147,6 @@ p = vo["-private"] = {
       set[field] = { value: args[index], writable: false, enumerable: true }
       return set
     },{})
-    descriptors.derive = {
-      writable: false,
-      enumerable: false,
-      value: vo.deriver(fields)
-    }
     p.defineProperties(instance,descriptors)
   },
   validateFields: function(fields,args) {

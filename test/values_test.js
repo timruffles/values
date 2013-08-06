@@ -28,7 +28,7 @@ suite("values", function(){
     assert.equal( 10, oneToTen.to )
   })
   test("it returns the same instance for a vo of same type with same fields", function() {
-    assert.equal( oneToTen, naturalNumbersUnderEleven )
+    assert( oneToTen === naturalNumbersUnderEleven )
   })
   test("derive doesn't affect existing vo", function() {
     assert.equal( 1, oneToTen.from )

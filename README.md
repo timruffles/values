@@ -183,7 +183,7 @@ for(var i=0; i < 1e5; i++) new Person(Math.random().toString(),Math.random());
 
 we use 10mb of memory: 4mb for the points, and 6mb for the people.
 
-Does this matter? It depends. The above is a worst case as none of the instances or strings are shared. However, since value semantics make sense when you have values that are identical, 200k value objects in 10mb (or 1 million in 50mb) gives your application a lot of room.
+Does this matter? It depends. The above is a worst case as none of the instances or strings are shared. However, since value semantics make sense when you have values that are identical (and therefore share the same instance), 200k unique instances in 10mb (or 1 million in 50mb) gives your application a lot of room.
 
 ## Modification/extension
 

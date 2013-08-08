@@ -1,6 +1,6 @@
 # Values
 
-[![Build Status](https://www.sidekickjs.com/r/timruffles/values/status_badge)](https://www.sidekickjs.com/r/timruffles/values)
+<a href='https://www.sidekickjs.com/r/timruffles/values'><img width='77' height='18' src='https://www.sidekickjs.com/r/timruffles/values/status_badge.png' /></a>
 
 Values is a library for improving your application code by adding value semantics. Lots of concepts in our apps don't have a specific 'identity' - for instance every `new Point({x: 0, y: 0})` is conceptually the same point. It's more natural if these concepts uphold these value semantics in our code, namely that ["two value objects are equal if all their fields are equal"](http://martinfowler.com/bliki/ValueObject.html). But by default in Javascript object equality is based on identity, so:
 

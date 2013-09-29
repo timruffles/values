@@ -27,7 +27,7 @@ var ValueObject = (function() {
 	    },this)
 	  },
 	  set: function(attrs) {
-	    throw new ValueObjectError(this.constructor.name + " is a value object - it can't be changed. Instead, use derive() to base a new value on this one")
+	    throw new Error(this.constructor.name + " is a value object - it can't be changed. Instead, use derive() to base a new value on this one")
 	  },
 	  check: function(vals) {
 	    if(deriveLock) return
@@ -57,13 +57,6 @@ var ValueObject = (function() {
 	  }
 	}
 
-  function ValueObjectError(message) {
-    this.message = message;
-  }
-  ValueObjectError.prototype = new Error();
-  ValueObjectError.prototype.name = "ValueObjectError"
-  ValueObject.Error = ValueObjectError
-
   function getter(vals,vo) {
     return _.bind(function(k) {
       assert(_.include(vo["-keys"],k),vo.constructor.name + " does not have field '" + k + "'")
@@ -71,7 +64,7 @@ var ValueObject = (function() {
     },this)
   }
   function assert(test,msg) {
-    if(!test) throw new ValueObjectError(msg)
+    if(!test) throw new Error(msg)
   }
 
   if(typeof module != "undefined") {

@@ -123,8 +123,6 @@ describe("vo.Backbone", function(){
             try {
               vos.a.set({foo: "bar"})
             } catch(e) {
-              if(!(e instanceof ValueObject.Error))
-                throw e
               msg = e.message
             }
             assert(/Period/.test(msg))

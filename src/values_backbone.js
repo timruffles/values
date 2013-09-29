@@ -1,8 +1,20 @@
 var ValueObject = (function() {
-	var deriveLock = false
+
 	function ValueObject() {
 	  this["-keys"] = [].slice.call(arguments)
 	}
+
+	var deriveLock = false
+
+  ValueObject.createPrototype = function(constructor) {
+    var tmp = function() {}
+    tmp.prototype = ValueObject.prototype
+    var proto = new tmp
+    proto["-keys"] = [].slice.call(arguments,1) 
+    proto.constructor = constructor 
+    return proto
+  }
+
 	ValueObject.prototype = {
 	  eql: function(to) {
 	    if(!to || !(typeof to.get == "function")) return false

@@ -3,11 +3,12 @@ global.assert = require("assert")
 var ValueObject = require("../src/values_backbone.js");
 
 describe("vo.Backbone", function(){
+
   function Period() {
     this.check(arguments)
   }
-  Period.prototype = new ValueObject("from","to")
-  Period.prototype.constructor = Period
+  Period.prototype = ValueObject.createPrototype(Period,"from","to")
+
   function MessageParticipants() {
     this.check(arguments)
   }
